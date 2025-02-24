@@ -2,93 +2,73 @@ import javax.swing.*;
 import java.awt.*;
 
 class Punto {
-    public float x, y;
+    int x, y;
 
-    public Punto(float x, float y) {
+    public Punto(int x, int y) {
         this.x = x;
         this.y = y;
     }
-
-    public float getX() { return x; }
-    public float getY() { return y; }
-
-    public String toString() {
-        return "Punto(" + x + ", " + y + ")";
-    }
 }
 
-class Linea {
-    public Punto p1, p2;
+class Linea extends JPanel {
+    Punto p1, p2;
 
     public Linea(Punto p1, Punto p2) {
         this.p1 = p1;
         this.p2 = p2;
+        setPreferredSize(new Dimension(400, 400)); 
     }
 
-    public void dibujaLinea(Graphics g) {
-        g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p2.getX(), (int) p2.getY());
+    @Override
+    public void paintComponent(Graphics g) {
+        g.drawLine(p1.x*20, p1.y*20, p2.x*20, p2.y*20);
     }
 
-    public String toString() {
-        return "Línea entre " + p1 + " y " + p2;
+
+    public void dibujaLinea() {
+        JFrame frame = new JFrame("Dibujar Línea");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(this); // Agrega el panel Linea directamente
+        frame.pack(); // Ajusta el tamaño según el panel
+        frame.setVisible(true);
     }
 }
 
-class Circulo {
-    public Punto centro;
-    public float radio;
 
-    public Circulo(Punto centro, float radio) {
+class Circulo extends JPanel {
+    Punto centro;
+    int radio;
+
+    public Circulo(Punto centro, int radio) {
         this.centro = centro;
         this.radio = radio;
+        setPreferredSize(new Dimension(400, 400)); // Tamaño del panel
     }
 
-    public void dibujaCirculo(Graphics g) {
-        int x = (int) (centro.getX() - radio);
-        int y = (int) (centro.getY() - radio);
-        int d = (int) (2 * radio);
-        g.drawOval(x, y, d, d);
+    public void paintComponent(Graphics g) {
+
+        g.drawOval(centro.x*10, centro.y*10, 2 * radio * 10, 2 * radio * 10);
     }
 
-    public String toString() {
-        return "Círculo con centro en " + centro + " y radio " + radio;
-    }
-}
-
-class PanelDibujo extends JPanel {
-    public Linea linea;
-    public Circulo circulo;
-
-    public PanelDibujo(Linea linea, Circulo circulo) {
-        this.linea = linea;
-        this.circulo = circulo;
-    }
-
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        linea.dibujaLinea(g);
-        circulo.dibujaCirculo(g);
+    public void dibujaCirculo() {
+        JFrame frame = new JFrame("Dibujar Círculo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(this);
+        frame.pack();
+        frame.setVisible(true);
     }
 }
+
 
 public class Graficador {
     public static void main(String[] args) {
-        Punto p1 = new Punto(50, 100);
-        Punto p2 = new Punto(200, 200);
+        Punto centro = new Punto(2, 2);
+        int radio = 5;
+        Circulo circulo = new Circulo(centro, radio);
+        circulo.dibujaCirculo();
+        Punto p1 = new Punto(5, 5);
+        Punto p2 = new Punto(3, 3);
         Linea linea = new Linea(p1, p2);
-
-        Punto centro = new Punto(300, 150);
-        Circulo circulo = new Circulo(centro, 50);
-
-        JFrame frame = new JFrame("Dibujando Línea y Círculo");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.add(new PanelDibujo(linea, circulo));
-        frame.setVisible(true);
-
-        System.out.println(p1);
-        System.out.println(p2);
-        System.out.println(linea);
-        System.out.println(circulo);
+        linea.dibujaLinea();
     }
 }
